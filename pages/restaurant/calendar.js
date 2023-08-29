@@ -94,7 +94,13 @@ function App() {
         setBreadCrubText(newBreadCrubText);
         // console.log(bookingRows[0].rest_sid);
         setData(data);
+
+        const selectedDateSlots = bookingRows.filter(
+          (booking) => booking.date === collectDate
+        );
+        setSelectedTimeSlots(selectedDateSlots);
       })
+
       .catch((error) => {
         console.error(error);
       });
@@ -158,14 +164,6 @@ function App() {
     setSelectedDate(date); // 設定所選日期
   };
 
-  useEffect(() => {
-    // 從 bookingRows 中找到與 collectDate 相等的日期
-    const selectedDateSlots = bookingRows.filter(
-      (booking) => booking.date === collectDate
-    );
-    setSelectedTimeSlots(selectedDateSlots);
-  }, [collectDate]);
-
   //下個月
   const handleNextMonth = () => {
     if (myMonth === 12) {
@@ -210,19 +208,12 @@ function App() {
     return selectedDate.getTime() < now.getTime();
   };
 
-  // 取得日期對應的星期幾
   // const getDayOfWeek = (dateStr) => {
   //   const date = new Date(dateStr);
-  //   const dayOfWeek = date.toLocaleDateString('zh-TW', { weekday: 'long' });
+  //   const dayOfWeekIndex = date.getDay();
+  //   const dayOfWeek = weekDayList[dayOfWeekIndex];
   //   return dayOfWeek;
   // };
-
-  const getDayOfWeek = (dateStr) => {
-    const date = new Date(dateStr);
-    const dayOfWeekIndex = date.getDay();
-    const dayOfWeek = weekDayList[dayOfWeekIndex];
-    return dayOfWeek;
-  };
 
   // 判斷日期是否在 30 天之後
   const isFutureDate = (year, month, date) => {
