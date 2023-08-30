@@ -60,52 +60,6 @@ function App() {
     }
   }, [auth, first]);
 
-  useEffect(() => {
-    fetch(`${process.env.API_SERVER}/restaurant-api/calendar`)
-      .then((r) => r.json())
-      .then((data) => {
-        const { bookingRows, memberRows } = data;
-
-        if (bookingRows && bookingRows.length > 0) {
-          setBookingRows(bookingRows);
-        }
-        // console.log(bookingRows[0].name);
-        if (memberRows && memberRows.length > 0) {
-          setMemberRows(...memberRows);
-        }
-
-        // 麵包屑
-        const newBreadCrubText = breadCrubText.map((v) => {
-          if (v.id === 'search') {
-            return {
-              ...v,
-              text: `> ${bookingRows[0].city}餐廳`,
-              href: `${process.env.WEB}/restaurant/list?city=${bookingRows[0].city}`,
-            };
-          }
-          if (v.id === 'rid') {
-            return {
-              ...v,
-              text: `> ${bookingRows[0].name}`,
-              href: `${process.env.WEB}/restaurant/${bookingRows[0].rest_sid}`,
-            };
-          } else return { ...v };
-        });
-        setBreadCrubText(newBreadCrubText);
-        // console.log(bookingRows[0].rest_sid);
-        setData(data);
-
-        const selectedDateSlots = bookingRows.filter(
-          (booking) => booking.date === collectDate
-        );
-        setSelectedTimeSlots(selectedDateSlots);
-      })
-
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
   // 取得今天的日期
   const today = new Date();
   const todayYear = today.getFullYear();
@@ -143,6 +97,56 @@ function App() {
   const [countPeople, setCountPeople] = useState(1);
   const [countPet, setCountPet] = useState(1);
   const [noteValue, setNoteValue] = useState('');
+  useEffect(() => {
+    fetch(`${process.env.API_SERVER}/restaurant-api/calendar`)
+      .then((r) => r.json())
+      .then((data) => {
+        const { bookingRows, memberRows } = data;
+
+        if (bookingRows && bookingRows.length > 0) {
+          setBookingRows(bookingRows);
+        }
+        // console.log(bookingRows[0].name);
+        if (memberRows && memberRows.length > 0) {
+          setMemberRows(...memberRows);
+        }
+
+        // 麵包屑
+        const newBreadCrubText = breadCrubText.map((v) => {
+          if (v.id === 'search') {
+            return {
+              ...v,
+              text: `> ${bookingRows[0].city}餐廳`,
+              href: `${process.env.WEB}/restaurant/list?city=${bookingRows[0].city}`,
+            };
+          }
+          if (v.id === 'rid') {
+            return {
+              ...v,
+              text: `> ${bookingRows[0].name}`,
+              href: `${process.env.WEB}/restaurant/${bookingRows[0].rest_sid}`,
+            };
+          } else return { ...v };
+        });
+        setBreadCrubText(newBreadCrubText);
+        // console.log(boo
+        const selectedDateSlots = bookingRows.filter(
+          (booking) => booking.date === collectDate
+        );
+        setSelectedTimeSlots(selectedDateSlots);
+      })
+
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [collectDate]);
+  
+  // useEffect(() => {
+  //   const selectedDateSlots = bookingRows.filter(
+  //     (booking) => booking.date === collectDate
+  //   );
+  //   setSelectedTimeSlots(selectedDateSlots);
+  // }, [collectDate]);
   const handleNoteChange = (event) => {
     // console.log('備註');
     setNoteValue(event.target.value);
